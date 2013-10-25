@@ -11,7 +11,7 @@ class Cell
   def solve 
 	@candidate = @standard_list - @block_selected - @row_selected - @column_selected
 	return @candidate[0] if @candidate.count == 1
-	return [0] 
+	return 0
   end
 
   def print_values

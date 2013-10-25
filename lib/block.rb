@@ -7,11 +7,18 @@ class Block
 
 	def initialize(block_array, rows, columns)
 		@block_array = block_array
+		# print "block array in block class"
+		# @block_array.each {|x| print x}
 		@rows = rows
+		# print "rows in block class"
+		# @rows.each {|x| print x}
 		@columns = columns
+		# print "cols in block class"
+		# @columns.each {|x| print x}
 		@row_reference = 0
 		@column_reference = 0
 		@block_selected = []
+		@break = false
 	end	
 
 	def block_array_count
@@ -19,19 +26,19 @@ class Block
 	end
 
 	def solve
-		9.times do
-		select_relevant_block_row_column
-		cell = Cell.new(@block_selected, @row_selected, @column_selected)
-		updated_cell_value = cell.solve 
-		update_block_row_column updated_cell_value
-		# return @block_array if block_completed?
-		i = 1
-		while (!empty_cell? and i<10)
+		@row_reference = 0
+		@column_reference = 0
+		while !block_completed?
+			if empty_cell?
+				select_relevant_block_row_column
+				cell = Cell.new(@block_selected, @row_selected, @column_selected)
+				updated_cell_value = cell.solve
+				update_block_row_column updated_cell_value		
+			end
 			move_to_the_next_cell
-			i += 1
 		end
-		# solve
-		end
+		print "block array in block class"
+		@block_array.each {|row| p row}
 		@block_array
 	end
 
@@ -40,18 +47,17 @@ class Block
 	end
 
 	def block_completed?
-		@row_reference == 3
+		(@row_reference == 3 and @column_reference == 0)
 	end
 
 	def move_to_the_next_cell
-		if @column_reference == 2
+		if @column_reference == 2 
 			@column_reference = 0
-			if @row_reference != 2
-				@row_reference += 1
-			end
+			@row_reference += 1
 		else
 			@column_reference += 1
 		end
+		return if block_completed?
 	end
 
 	def select_relevant_block_row_column
@@ -74,8 +80,8 @@ class Block
 
 	def update_block_row_column updated_cell_value
 		@block_array[@row_reference][@column_reference] = updated_cell_value
-		@rows[@row_reference][@column_reference] = updated_cell_value
-		@columns[@row_reference][@column_reference] = updated_cell_value
+		# @rows[@row_reference][@column_reference] = updated_cell_value
+		# @columns[@row_reference][@column_reference] = updated_cell_value
 	end
 
 	def print_array_values
